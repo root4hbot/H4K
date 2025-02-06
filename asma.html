@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>I love you Asma ❤️</title>
+<style>
+body {
+  font-family: sans-serif;
+  background-color: #ffe4e1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.container {
+  text-align: center;
+}
+
+button {
+  background-color: #ff69b4;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#message {
+  margin-top: 20px;
+  color: #ff1493;
+  font-size: 20px;
+}
+
+#toggleButton {
+  display: none; /* إخفاء الزر في البداية */
+  background-color: #8a2be2; /* لون مختلف للزر الثاني */
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <button id="mainButton" onclick="showToggleButton()">اضغط هنا</button>
+  <button id="toggleButton" onclick="showMessage()">تشقلب هنا</button>
+  <div id="message"></div>
+</div>
+
+<script>
+function showToggleButton() {
+  document.getElementById("mainButton").style.display = "none"; // إخفاء الزر الأول
+  document.getElementById("toggleButton").style.display = "block"; // إظهار الزر الثاني
+}
+
+function showMessage() {
+  document.getElementById("message").innerHTML = "I love you Asma ❤️";
+}
+</script>
+
+</body>
+</html>
