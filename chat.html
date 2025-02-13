@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>محادثة ثنائية</title>
+<style>
+body {
+  font-family: sans-serif;
+}
+#chat-area {
+  width: 500px;
+  height: 300px;
+  border: 1px solid #ccc;
+  overflow-y: scroll;
+  padding: 10px;
+}
+#message-input {
+  width: 400px;
+  padding: 5px;
+}
+</style>
+</head>
+<body>
+
+<h1>محادثة ثنائية</h1>
+
+<div id="chat-area"></div>
+
+<input type="text" id="message-input" placeholder="اكتب رسالتك هنا...">
+<button onclick="sendMessage()">إرسال</button>
+
+<script>
+let userType; // 1 أو 2
+
+// تحديد نوع المستخدم عند الدخول
+userType = prompt("أنت المستخدم الأول أم الثاني؟ (1 أو 2)");
+if (userType !== "1" && userType !== "2") {
+  alert("الرجاء إدخال 1 أو 2 فقط.");
+  window.location.reload(); // إعادة تحميل الصفحة
+}
+
+function sendMessage() {
+  const messageInput = document.getElementById("message-input");
+  const message = messageInput.value;
+
+  if (message.trim() !== "") {
+    displayMessage(message, userType);
+
+    // هنا يمكنك إضافة كود لإرسال الرسالة إلى الطرف الآخر عبر الإنترنت
+    // باستخدام تقنيات مثل WebSockets أو AJAX
+    // حاليًا، يتم عرض الرسالة في منطقة الدردشة فقط
+
+    messageInput.value = ""; // مسح مربع الإدخال
+  }
+}
+
+function displayMessage(message, userType) {
+  const chatArea = document.getElementById("chat-area");
+  const messageDiv = document.createElement("div");
+  messageDiv.textContent = `المستخدم ${userType}: ${message}`;
+  chatArea.appendChild(messageDiv);
+  chatArea.scrollTop = chatArea.scrollHeight; // تمرير تلقائي إلى آخر رسالة
+}
+</script>
+
+</body>
+</html>
