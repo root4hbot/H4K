@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>محادثة ثنائية</title>
+<style>
+body {
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f0f0;
+}
+
+#chat-container {
+  width: 500px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+}
+
+#chat-area {
+  height: 300px;
+  overflow-y: scroll;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.message {
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border-radius: 16px;
+  max-width: 70%;
+  clear: both; /* لمنع تداخل الرسائل */
+}
+
+.message.user-1 {
+  background-color: #e0f2f7; /* لون رسائل المستخدم 1 */
+  float: left; /* محاذاة لليسار */
+}
+
+.message.user-2 {
+  background-color: #c8e6c9; /* لون رسائل المستخدم 2 */
+  float: right; /* محاذاة لليمين */
+}
+
+.input-area {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.input-area input[type="text"] {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.input-area button {
+  padding: 8px 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<div id="chat-container">
+  <h1>محادثة ثنائية</h1>
+
+  <div id="chat-area"></div>
+
+  <div class="input-area">
+    <input type="text" id="message-input-1" placeholder="رسالة المستخدم 1">
+    <button onclick="sendMessage(1)">إرسال</button>
+  </div>
+
+  <div class="input-area">
+    <input type="text" id="message-input-2" placeholder="رسالة المستخدم 2">
+    <button onclick="sendMessage(2)">إرسال</button>
+  </div>
+</div>
+
+<script>
+let userType;
+
+// تحديد نوع المستخدم (1 أو 2)
+userType = prompt("أنت المستخدم الأول أم الثاني؟ (1 أو 2)");
+if (userType !== "1" && userType !== "2") {
+  alert("الرجاء إدخال 1 أو 2 فقط.");
+  window.location.reload();
+}
+
+function sendMessage(user) {
+  const messageInput = document.getElementById(`message-input-${user}`);
+  const message = messageInput.value;
+
+  if (message.trim() !== "") {
+    displayMessage(message, user);
+    messageInput.value = "";
+  }
+}
+
+function displayMessage(message, user) {
+  const chatArea = document.getElementById("chat-area");
+  const messageDiv = document.createElement("div");
+  messageDiv.classList.add("message", `user-${user}`);
+  messageDiv.textContent = message;
+  chatArea.appendChild(messageDiv);
+  chatArea.scrollTop = chatArea.scrollHeight;
+}
+</script>
+
+</body>
+</html>
