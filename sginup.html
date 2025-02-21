@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحة تسجيل الدخول</title>
+    <style>
+        /* CSS: تصميم الصفحة */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+
+        .switch-form {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #007bff;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- HTML: نموذج تسجيل الدخول -->
+    <div class="container">
+        <!-- نموذج تسجيل الدخول -->
+        <div id="loginFormContainer">
+            <h2>تسجيل الدخول</h2>
+            <form id="loginForm">
+                <label for="username">اسم المستخدم:</label>
+                <input type="text" id="loginUsername" name="username" required>
+
+                <label for="password">كلمة المرور:</label>
+                <input type="password" id="loginPassword" name="password" required>
+
+                <button type="submit">تسجيل الدخول</button>
+            </form>
+            <p id="loginErrorMessage" class="error-message"></p>
+            <p class="switch-form" id="switchToRegister">إنشاء حساب جديد؟</p>
+        </div>
+
+        <!-- نموذج إنشاء حساب -->
+        <div id="registerFormContainer" class="hidden">
+            <h2>إنشاء حساب جديد</h2>
+            <form id="registerForm">
+                <label for="newUsername">اسم المستخدم:</label>
+                <input type="text" id="newUsername" name="username" required>
+
+                <label for="newPassword">كلمة المرور:</label>
+                <input type="password" id="newPassword" name="password" required>
+
+                <button type="submit">إنشاء الحساب</button>
+            </form>
+            <p id="registerErrorMessage" class="error-message"></p>
+            <p class="switch-form" id="switchToLogin">هل لديك حساب؟ تسجيل الدخول</p>
+        </div>
+    </div>
+
+    <!-- JavaScript: التحقق من المستخدمين وإدارة النماذج -->
+    <script>
+        // قائمة المستخدمين المسموح لهم بالدخول
+        let allowedUsers = [
+            { username: "admin", password: "admin123", page: "admin.html" },
+            { username: "batoul", password: "batoul", page: "user1.html" },
+            { username: "ali", password: "ali", page: "user2.html" }
+        ];
+
+        // تبديل بين نموذج تسجيل الدخول ونموذج إنشاء الحساب
+        document.getElementById("switchToRegister").addEventListener("click", function() {
+            document.getElementById("loginFormContainer").classList.add("hidden");
+            document.getElementById("registerFormContainer").classList.remove("hidden");
+        });
+
+        document.getElementById("switchToLogin").addEventListener("click", function() {
+            document.getElementById("registerFormContainer").classList.add("hidden");
+            document.getElementById("loginFormContainer").classList.remove("hidden");
+        });
+
+        // التحقق من تسجيل الدخول
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById("loginUsername").value;
+            const password = document.getElementById("loginPassword").value;
+
+            const user = allowedUsers.find(u => u.username === username && u.password === password);
+
+            if (user) {
+                alert("تم تسجيل الدخول بنجاح!");
+                window.location.href = user.page; // توجيه المستخدم إلى صفحته الخاصة
+            } else {
+                document.getElementById("loginErrorMessage").textContent = "اسم المستخدم أو كلمة المرور غير صحيحة!";
+            }
+        });
+
+        // إنشاء حساب جديد
+        document.getElementById("registerForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const newUsername = document.getElementById("newUsername").value;
+            const newPassword = document.getElementById("newPassword").value;
+
+            // التحقق مما إذا كان اسم المستخدم موجودًا بالفعل
+            const userExists = allowedUsers.some(u => u.username === newUsername);
+
+            if (userExists) {
+                document.getElementById("registerErrorMessage").textContent = "اسم المستخدم موجود بالفعل!";
+            } else {
+                // إضافة المستخدم الجديد إلى القائمة مع صفحة خاصة به
+                const newUserPage = `${newUsername}.html`; // إنشاء صفحة جديدة باسم المستخدم
+                allowedUsers.push({ username: newUsername, password: newPassword, page: newUserPage });
+                alert("تم إنشاء الحساب بنجاح!");
+
+                // إعادة توجيه المستخدم إلى صفحته الخاصة
+                window.location.href = newUserPage;
+
+                document.getElementById("registerForm").reset();
+                document.getElementById("registerErrorMessage").textContent = "";
+
+                // العودة إلى نموذج تسجيل الدخول
+                document.getElementById("registerFormContainer").classList.add("hidden");
+                document.getElementById("loginFormContainer").classList.remove("hidden");
+            }
+        });
+    </script>
+</body>
+</html>
