@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حالة الطقس</title>
+    <style>
+        body { 
+            font-family: 'Arial', sans-serif; 
+            text-align: center; 
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            color: white; 
+            padding: 20px;
+            overflow: hidden;
+        }
+        #container {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            color: black;
+            position: relative;
+            z-index: 2;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            width: 80%;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #weather img {
+            width: 80px;
+        }
+        .loading {
+            font-size: 18px;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🌤️ تحديث حالة الطقس</h1>
+    <div id="container">
+        <input type="text" id="city" placeholder="أدخل اسم المدينة" value="Cairo">
+        <button onclick="getWeatherByCity()">🌍 عرض الطقس</button>
+        <button onclick="getWeatherByLocation()">📍 تحديد موقعي</button>
+
+        <div id="weather">
+            <h2 id="location"></h2>
+            <img id="icon" src="" alt="حالة الطقس">
+            <p><strong>🌡️ درجة الحرارة:</strong> <span id="temp"></span>°C</p>
+            <p><strong>🌤️ الوصف:</strong> <span id="condition"></span></p>
+        </div>
+        <p id="loading" class="loading"></p>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
