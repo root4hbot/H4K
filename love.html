@@ -1,0 +1,129 @@
+```html
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>رسالة حب رقمية</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('https://images.unsplash.com/photo-1509803834428-2bec8d3be2aa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Tajawal', sans-serif;
+            color: white;
+            text-align: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(6, 204, 239, 0.6);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            font-family: 'Times New Roman', Times, serif;
+            color: black;
+        }
+        #cipherMessage {
+            font-size: 1.5em;
+            margin: 20px;
+            max-width: 600px;
+            display: block;
+            font-family: 'Times New Roman', Times, serif;
+            color: #444;
+        }
+        #originalMessage {
+            display: none;
+            font-size: 1.5em;
+            margin-top: 20px;
+            background: rgba(225, 7, 210, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            color: black;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background-color 0.3s ease;
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+        }
+        #decryptBtn {
+            background-color: #ff6699;
+            color: white;
+        }
+        #decryptBtn:hover {
+            background-color: #ff3366;
+        }
+        #lockBtn {
+            background-color: #666;
+            color: white;
+        }
+        #lockBtn:hover {
+            background-color: #444;
+        }
+        #batoul{
+            color: black;
+            font-weight: 250;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="overlay">
+        <div class="profile-pic"></div>
+        <h1 > دخيلووو يلي سمع الكلام وفتح الرابط شو احبوو 😌❤️</h1>
+        <p id="cipherMessage"> Encryption message: Dqj#xhw#qerg#ndly#uhq#doole#dqw#uhq#doole<br><br> <span id="batoul">يعينك الله تحملني واضغط عالزر بعرف مجنونة 😂❤️</span></p>
+        <div id="originalMessage">
+            <pre >أحببتك كما أحب الليل نجومه،  
+بلا سبب، بلا شرط، بلا نهاية.  
+أنتَ الحكاية التي لا ينطوي فصلها، واللحظة التي كل يوم تصبح أغلى.  
+إذا نسيت يومًا كم أنا أتنفّسك، فافتح هذه الكلمات... واسمعني.  
+
+في ضحكتك مرآة لروحي،  
+وفي وجودك وطن لا يحتاج جواز سفر.
+في هذا العالم المزدحم بالتكرار...  
+كنتَ أنتَ استثنائي.  
+وستبقى أنتَ رسالتي التي أرسلتها الحياة لي،  
+فأردتُ أن أجيبها بكلمة واحدة: أحبك، بقدر ما لا تُعدّ الكلمات..❤️🫂
+
+حبيبتك الهبلة😂</pre>
+        </div>
+        <br>
+        <button id="decryptBtn" onclick="showOriginalMessage()">🥰 Click me please</button><br>
+        <button id="lockBtn" onclick="hideOriginalMessage()" style="display:none;">إعادة قفل الرسالة</button>
+        
+    
+    </div>
+
+    <script>
+        function showOriginalMessage() {
+            document.getElementById('originalMessage').style.display = 'block';
+            document.getElementById('lockBtn').style.display = 'inline-block';
+            document.getElementById('decryptBtn').style.display = 'none';
+           
+        }
+
+        function hideOriginalMessage() {
+            document.getElementById('originalMessage').style.display = 'none';
+            document.getElementById('lockBtn').style.display = 'none';
+            document.getElementById('decryptBtn').style.display = 'inline-block';
+           
+        }
+    </script>
+</body>
+</html>
+```
