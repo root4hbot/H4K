@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>سجل مجد - جمعية أبو عادل</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Tahoma', Arial, sans-serif;
+            background: linear-gradient(135deg, #f9d423, #ff4e50);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .card {
+            background: #fff;
+            max-width: 500px;
+            width: 100%;
+            padding: 30px 25px;
+            border-radius: 60px 20px 60px 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            text-align: center;
+            border: 6px solid #f1c40f;
+            position: relative;
+            transition: 0.3s;
+        }
+        .card:hover {
+            transform: scale(1.02) rotate(-1deg);
+        }
+        .card h1 {
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .card h1 span {
+            background: #f1c40f;
+            padding: 0 12px;
+            border-radius: 30px;
+            display: inline-block;
+            transform: rotate(-5deg);
+        }
+        .subtitle {
+            font-size: 1rem;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            border-bottom: 3px dashed #f1c40f;
+            padding-bottom: 10px;
+        }
+        .owner {
+            background: #ecf0f1;
+            padding: 8px;
+            border-radius: 50px;
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        .owner i {
+            font-style: normal;
+            background: #e67e22;
+            color: #fff;
+            padding: 2px 12px;
+            border-radius: 30px;
+            margin: 0 5px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+            text-align: right;
+        }
+        .form-group label {
+            font-weight: bold;
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 3px solid #bdc3c7;
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: 0.3s;
+            background: #fafafa;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #f1c40f;
+            outline: none;
+            background: #fff;
+            box-shadow: 0 0 0 5px rgba(241, 196, 15, 0.3);
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+            background: #fef9e7;
+            padding: 10px;
+            border-radius: 50px;
+            border: 2px solid #f1c40f;
+        }
+        .checkbox-group input {
+            width: 20px;
+            height: 20px;
+            accent-color: #e67e22;
+            cursor: pointer;
+        }
+        .checkbox-group label {
+            font-size: 0.95rem;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        .btn {
+            background: #f1c40f;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            border-radius: 60px;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+            box-shadow: 0 8px 0 #d4ac0d;
+            margin-top: 10px;
+            border: 2px solid #d4ac0d;
+        }
+        .btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 0 #d4ac0d;
+            background: #f39c12;
+        }
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #d4ac0d;
+        }
+        .result {
+            margin-top: 25px;
+            padding: 15px;
+            background: #2c3e50;
+            color: #f1c40f;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            display: none;
+            border: 3px solid #f1c40f;
+            animation: pop 0.5s ease;
+        }
+        .result.show {
+            display: block;
+        }
+        .result span {
+            color: #fff;
+            background: #e67e22;
+            padding: 2px 15px;
+            border-radius: 40px;
+            margin: 0 5px;
+        }
+        .emoji-big {
+            font-size: 3rem;
+            display: block;
+            margin: 5px 0;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #95a5a6;
+        }
+        .footer a {
+            color: #e67e22;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        @keyframes pop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        /* نكتة بصرية */
+        .funny-note {
+            background: #fffaec;
+            padding: 8px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin: 15px 0;
+            border: 2px dotted #e67e22;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>🗂️ <span>سجل مجد</span></h1>
+    <div class="subtitle">📌 جمعية أبو عادل الخيرية (للاستقبال)</div>
+    <div class="owner">
+        👑 المالك: <i>أبو عادل</i> (اللي ما يرضى إلا الكويس)
+    </div>
+
+    <!-- النموذج المضحك -->
+    <form id="magedForm">
+        <div class="form-group">
+            <label>🆔 الاسم الرباعي (زي جواز السفر)</label>
+            <input type="text" id="fullName" placeholder="مجد كمال أحمد محمد" required />
+        </div>
+
+        <div class="form-group">
+            <label>📅 تاريخ الميلاد (هجري / ميلادي)</label>
+            <input type="text" id="birthDate" placeholder="مثلاً: 1/1/1990 أو 1/1/1410" required />
+        </div>
+
+        <div class="form-group">
+            <label>🏠 العنوان (حتى لو في الخيم)</label>
+            <input type="text" id="address" placeholder="شارع أبو عادل، مقابل الدكان" required />
+        </div>
+
+        <div class="form-group">
+            <label>📞 رقم الجوال (أبشرك أبو عادل يتصل)</label>
+            <input type="tel" id="phone" placeholder="05xxxxxxxx" required />
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="funnyCheck" required />
+            <label for="funnyCheck">✅ أوافق على أن أبو عادل هو الأستاذ أبو عادل (ما في نقاش)</label>
+        </div>
+
+        <div class="funny-note">
+            ⚠️ ملاحظة: إذا كنت مجد، سجل علطول. إذا مش مجد، برضه سجل... أبو عادل بيحب الكل.
+        </div>
+
+        <button type="submit" class="btn">🚀 سجل مجد الآن</button>
+    </form>
+
+    <!-- منطقة النتيجة المضحكة -->
+    <div id="resultBox" class="result">
+        <span class="emoji-big">🎉</span>
+        تم تسجيل <span id="displayName">مجد</span> في جمعية أبو عادل!
+        <br />
+        <small style="font-size: 0.9rem; color: #ecf0f1;">
+            📣 أبو عادل يقول: أهلاً وسهلاً... خلصت التسجيل، روح جيب خبز.
+        </small>
+    </div>
+
+    <div class="footer">
+        🧨 تصميم موقع "سجل مجد" - جميع الحقوق محفوظة لأبو عادل &copy; 2026
+    </div>
+</div>
+
+<script>
+    // منطق الموقع المضحك
+    document.getElementById('magedForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // جلب الاسم من الحقل
+        const nameInput = document.getElementById('fullName');
+        let name = nameInput.value.trim();
+
+        // إذا كان الحقل فارغاً أو يحتوي مسافات فقط، نضعه اسم "مجد مجد مجد"
+        if (name === '') {
+            name = 'مجد المجداوي';
+        }
+
+        // عرض الاسم في خانة النتيجة
+        document.getElementById('displayName').textContent = name;
+
+        // إظهار النتيجة مع حركة
+        const resultBox = document.getElementById('resultBox');
+        resultBox.classList.add('show');
+
+        // إعادة تعيين النموذج بعد 3 ثواني (عشان ما يتراكم)
+        setTimeout(() => {
+            // لكن نترك الاسم معروض، فقط ننبه المستخدم
+            resultBox.style.border = '6px solid #2ecc71';
+            setTimeout(() => {
+                resultBox.style.border = '3px solid #f1c40f';
+            }, 1000);
+        }, 500);
+
+        // نكتة إضافية: تغيير زر التسجيل مؤقتاً
+        const btn = document.querySelector('.btn');
+        const originalText = btn.textContent;
+        btn.textContent = '✅ تم التسجيل يا مجد!';
+        btn.style.background = '#2ecc71';
+        btn.style.boxShadow = '0 8px 0 #27ae60';
+
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = '#f1c40f';
+            btn.style.boxShadow = '0 8px 0 #d4ac0d';
+        }, 3000);
+
+        // إضافة تأثير صوتي وهمي (تنبيه)
+        alert('🎵 أبو عادل قال: ألف مبروك، صرت عضو في جمعيتي! (اضغط موافق عشان تكمل)');
+    });
+
+    // تأثير إضافي: إذا كتب المستخدم "مجد" في أي حقل، يظهر نجمات
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', function() {
+            if (this.value.includes('مجد')) {
+                this.style.borderColor = '#f1c40f';
+                this.style.boxShadow = '0 0 15px rgba(241, 196, 15, 0.6)';
+            } else {
+                this.style.borderColor = '#bdc3c7';
+                this.style.boxShadow = 'none';
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
